@@ -1,3 +1,40 @@
-:root {
-    
+:root{
+    --marker: green;
+    --board: gray;
+    --board-hover: lightblue;
+    --reset: green;
+    --ai-active: dodgerblue;
+    --me-active: red;
 }
+
+
+/* 
+position
+display
+margin
+border
+background(with color)
+padding
+height × width 
+font
+color
+*/
+
+
+*{
+}
+.html{
+}
+.main{
+}
+
+
+/* BUTTON */
+
+/* ARRANGEMENT */
+
+/* SEC1 */
+
+/* SEC2 */
+
+/* SEC3 */
