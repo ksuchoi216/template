@@ -1,0 +1,9 @@
+_target_: lightning.Trainer
+# profiler: "simple"
+default_root_dir: "${paths.log_dir}"
+min_epochs: 1
+max_epochs: 20
+accelerator: 'auto'
+devices: 1
+# fast_dev_run: True
+# strategy: ddp_spawn
