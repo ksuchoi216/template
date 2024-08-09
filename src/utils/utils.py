@@ -1,7 +1,7 @@
-from src.utils import pylogger
 import hydra
 from omegaconf import DictConfig
 
+from src.utils import pylogger
 
 log = pylogger.get_pylogger(__name__)
 
@@ -30,7 +30,7 @@ def get_metric_value(metric_dict: dict, metric_name: str) -> float:
 
     if not metric_name:
         log.info("Metric name is None! Skipping metric value retrieval...")
-        return None
+        return None  # type: ignore
 
     if metric_name not in metric_dict:
         raise Exception(

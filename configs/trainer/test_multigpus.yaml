@@ -4,10 +4,11 @@ _target_: lightning.Trainer
 default_root_dir: "${paths.log_dir}"
 min_epochs: 1
 max_epochs: 2
-accelerator: 'auto'
-devices: 1
+accelerator: gpu
+devices: -1
+strategy: ddp
 
 num_sanity_val_steps: 0
-limit_train_batches: 1
-limit_val_batches: 1
+limit_train_batches: 0.5
+limit_val_batches: 0.5
 limit_test_batches: 1

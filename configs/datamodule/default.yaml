@@ -1,0 +1,16 @@
+_target_: src.datamodules.datamodule.DataModule
+cfg:
+  data_dir: '${paths.data_dir}'
+  dataset_name: sensor
+  dataname: data
+  filenum: null
+  snum: null
+  mac_address: ['B4_52_A9_B3_C5_56']
+
+  ratios: [0.8, 0.1, 0.1]
+
+  batch_size: 64
+  num_workers: 79
+
+  model_record: null
+  test_run: false

@@ -1,0 +1,29 @@
+# @package _global_
+
+defaults:
+  - override /hydra/sweeper: optuna
+  - override /hydra/sweeper/sampler: grid
+
+optimized_metric: "val/mse"
+hydra:
+  sweep:
+    dir: ${paths.output_dir}/multiruns
+    subdir: ${hydra.job.override_dirname}
+  sweeper:
+    # sampler:
+    #   _target_: optuna.samplers.TPESampler
+      # seed: 123
+    direction: maximize
+    storage: null
+    study_name: test
+    n_trials: 20
+    n_jobs: 1
+    params:
+      runner.model.cfg.num_layers: range(1, 20, step=1)
+      # datamodule.dataset.seq_len: choice(48, 96, 168, 336)
+      # trainer.max_epochs: choice(1,2,3)
+      # pl_module.model.num_layers: choice(1,2,3)
+
+    # study_name: hp_search_test
+    # storage: sqlite:///example.db
+

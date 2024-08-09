@@ -3,11 +3,7 @@ _target_: lightning.Trainer
 # profiler: "simple"
 default_root_dir: "${paths.log_dir}"
 min_epochs: 1
-max_epochs: 2
+max_epochs: 20
 accelerator: 'auto'
 devices: 1
 
-num_sanity_val_steps: 0
-limit_train_batches: 1
-limit_val_batches: 1
-limit_test_batches: 1

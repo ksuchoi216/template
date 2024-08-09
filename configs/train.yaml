@@ -1,7 +1,7 @@
 defaults:
   - _self_
-  - datamodule: ts_datamodule.yaml
-  - pl_module: null
+  - datamodule: base_datamodule.yaml
+  - runner: null
   - trainer: default.yaml
   - callbacks: default.yaml
   - hydra: default.yaml
@@ -10,25 +10,28 @@ defaults:
 
 seed: 70
 
-paths:
-  base_dir: /home/ksuchoi216/tsf
-  data_dir: "${paths.base_dir}/data/pv_dacon"
+# * Paths
+paths: 
+  base_dir: '.'
+  data_dir: "${paths.base_dir}/data"
   output_dir: "${paths.base_dir}/outputs"
   log_dir: "${paths.base_dir}/logs"
   ckpt_dir: "${paths.base_dir}/outputs/checkpoints"
   ckpt_path: "${paths.base_dir}/outputs/checkpoints/last.ckpt"
-  draw_dir: "${paths.base_dir}/plots"
-  # log_dir: "${root_dir}/logs"
-  # output_dir: ${hydra:runtime.output_dir}
-  # work_dir: ${hydra:runtime.cwd}
-  # save_dir: "${root_dir}/save"
 
-mlflow:
-  url: http://192.168.1.100:25001
-  # url: http://localhost:5001
-  experiment_name: null
-  added_name: null
+# * Run mode
+run_mode:
+  train: true
+  test: true
+  pred: true
+  resume: false
+  test_run: false
+  hp_search: false
 
-train: True
-test: False
-resume: False
+# * Names
+names:
+  run_name: null
+  project: null
+  datamodule: null
+  runner: null
+  exp: null

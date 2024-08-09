@@ -2,13 +2,13 @@ _target_: lightning.Trainer
 # profiler: "simple"
 default_root_dir: "${paths.log_dir}"
 min_epochs: 1
-max_epochs: 20
-accelerator: 'auto'
-devices: 1
+max_epochs: 100
+accelerator: gpu
+devices: -1
+strategy: ddp
+
 logger: 
   _target_: lightning.pytorch.loggers.WandbLogger
   project: "project_name"
   name: "run_name"
   log_model: "all"
-# fast_dev_run: True
-# strategy: ddp_spawn
