@@ -37,6 +37,8 @@ class Runner(L.LightningModule):
         self.train_metric_selection = metric_selection["train"]
         self.test_metric_selection = metric_selection["test"]
         self._set_metrics()
+        print(f"[run] self.train_metric_selection: {self.train_metric_selection}")
+        print(f"[run] self.test_metric_selection: {self.test_metric_selection}")
 
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()
@@ -71,9 +73,10 @@ class Runner(L.LightningModule):
 
         batch_x = dict(
             seq_x=batch["seq_x"],
-            seq_y=batch["seq_y"],
             seq_xt=batch["seq_xt"],
             seq_yt=batch["seq_yt"],
+            past_x=batch["past_x"],
+            past_xt=batch["past_xt"],
         )
         seq_y = batch["seq_y"]
 
@@ -82,13 +85,20 @@ class Runner(L.LightningModule):
 
         return batch_x, y_true
 
+    def prepare_loss(self, y_pred, y_true):
+        return y_pred.reshape(-1, 1), y_true.reshape(-1, 1)
+
     def training_step(self, batch, batch_idx):
         batch_x, y_true = self.prepare_batch(batch)
         y_pred = self.model(batch_x)
-        print(f"[run] y_pred: {y_pred.shape}")
-        print(f"[run] y_true: {y_true.shape}")
+        y_pred, y_true = self.prepare_loss(y_pred, y_true)
+
+        print(f"[run] y_pred: {y_pred.shape}, type(y_pred): {type(y_pred)}")
+        print(f"[run] y_true: {y_true.shape}, type(y_true): {type(y_true)}")
+        print(f"self.criterion: {self.criterion}")
 
         loss = self.criterion(y_pred, y_true)
+        print(f"[run] loss: {loss}")
         self.train_loss(loss)
         self.log(
             "train/loss",
@@ -114,8 +124,10 @@ class Runner(L.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
+        print(f"[run] validation_step: {batch_idx}")
         batch_x, y_true = self.prepare_batch(batch)
         y_pred = self.model(batch_x)
+        y_pred, y_true = self.prepare_loss(y_pred, y_true)
         loss = self.criterion(y_pred, y_true)
 
         self.val_loss(loss)
@@ -145,7 +157,9 @@ class Runner(L.LightningModule):
     def test_step(self, batch, batch_idx):
         batch_x, y_true = self.prepare_batch(batch)
         y_pred = self.model(batch_x)
+        y_pred, y_true = self.prepare_loss(y_pred, y_true)
         loss = self.criterion(y_pred, y_true)
+
         self.test_loss(loss)
         self.log(
             "test/loss",

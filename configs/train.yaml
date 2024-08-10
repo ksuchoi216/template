@@ -30,8 +30,7 @@ run_mode:
 
 # * Names
 names:
-  run_name: null
-  project: null
-  datamodule: null
-  runner: null
-  exp: null
+  project: project
+  datamodule: datamodule
+  runner: runner
+  exp: exp

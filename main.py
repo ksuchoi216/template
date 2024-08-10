@@ -1,6 +1,7 @@
 import os
 import pickle
 import sys
+import warnings
 from datetime import datetime
 from pprint import pprint
 from urllib import parse
@@ -11,9 +12,13 @@ import torch
 import wandb
 from lightning.pytorch.loggers import WandbLogger
 from omegaconf import DictConfig, OmegaConf
-from torch import inference_mode
 
 from src import utils
+
+# from torch import inference_mode
+
+
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 log = utils.get_pylogger(__name__)
 

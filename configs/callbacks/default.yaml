@@ -8,15 +8,15 @@ defaults:
 model_checkpoint:
   dirpath: ${paths.output_dir}/checkpoints
   filename: "epoch_{epoch:03d}"
-  monitor: null
-  mode: null
+  monitor: ${runner.setup.monitor}
+  mode: ${runner.setup.mode}
   save_last: True
   auto_insert_metric_name: True
 
 early_stopping:
-  monitor: null
-  mode: null
-  patience: null
+  monitor: ${runner.setup.monitor}
+  mode: ${runner.setup.mode}
+  patience: ${runner.setup.patience}
 
 model_summary:
   max_depth: 2

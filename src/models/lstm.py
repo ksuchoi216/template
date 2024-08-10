@@ -84,13 +84,13 @@ if __name__ == "__main__":
     cfg_model_path = f"{cwd}/configs/runner/{model_name}.yaml"
     with open(cfg_model_path) as f:
         cfgm = edict(yaml.safe_load(f))
-        model_target = cfgm.model._target_  # type: ignore
-        cfgm = cfgm.model.cfg  # type: ignore
+        model_target = cfgm.model._target_
+        cfgm = cfgm.model.cfg
 
     cfg_data_path = f"{cwd}/configs/datamodule/{datamodule_name}.yaml"
     with open(cfg_data_path) as f:
         cfgdm = edict(yaml.safe_load(f))
-        cfgdm = cfgdm.cfg  # type: ignore
+        cfgdm = cfgdm.cfg
 
     print(f"model_target: {model_target}")
     assert cfgm.model_name == model_name, f"{cfgm.model_name} != {model_name}"

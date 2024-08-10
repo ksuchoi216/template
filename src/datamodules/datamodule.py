@@ -4,11 +4,11 @@ import lightning as L
 import pandas as pd
 from torch.utils.data import DataLoader, Dataset
 
-# from src.datasets.sensor_dataset import SensorDataset
+from src.datasets.dataset import Custom_Dataset
 
-dataset_dict = {
-    "sensor": SensorDataset,
-}
+dataset_dict = dict(
+    custom=Custom_Dataset,
+)
 
 
 class DataModule(L.LightningDataModule):
@@ -32,14 +32,14 @@ class DataModule(L.LightningDataModule):
 
     def data_provider(self, cfg, stage):
 
-        if stage in ["val", "test", "pred"]:
-            shuffle_flag = False
+        if stage == "train":
+            shuffle_flag = True
             drop_last = True
             batch_size = cfg.batch_size
         else:
-            shuffle_flag = True
+            shuffle_flag = False
             drop_last = True
-            batch_size = cfg.batch_size  # bsz for train and valid
+            batch_size = cfg.batch_size
 
         dataset = self.dataset(cfg, stage)
         dataloader = DataLoader(
@@ -60,5 +60,5 @@ class DataModule(L.LightningDataModule):
     def test_dataloader(self):
         return self.data_provider(self.cfg, "test")
 
-    def predict_dataloader(self):
+    def predict_dataloader(self):  # -> DataLoader[Any]:
         return self.data_provider(self.cfg, "pred")
