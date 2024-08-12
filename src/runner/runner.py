@@ -184,40 +184,47 @@ class Runner(L.LightningModule):
 
         return loss
 
-    # def predict_step(self, batch, batch_id):
-    #     def transform_data(seq_y, y_pred, t_dim):
-    #         b, s, d = seq_y.shape
-    #         seq_y[..., t_dim] = y_pred
+    def predict_step(self, batch, batch_id):
+        scaler = joblib.load(f"{self.info.data_dir}/scaler.pkl")
+        batch_x, y_true = batch
+        print(f"[exp] batch_x: {batch_x.shape}") if self.printout else None
+        print(f"[exp] y_true: {y_true.shape}") if self.printout else None
 
-    #         seq_y = rearrange(seq_y, "b s d -> (b s) d")
+        y_pred = self.model(batch_x)
+        print(f"[exp] y_pred: {y_pred.shape}") if self.printout else None
 
-    #         seq_y = scaler.inverse_transform(seq_y)
-    #         seq_y = rearrange(seq_y, "(b s) d -> b s d", b=b, s=s)
-    #         y_pred = seq_y[..., t_dim].squeeze()
-    #         return y_pred
+        y_pred = y_pred.unsqueeze(1)
+        y_true = y_true.unsqueeze(1)
 
-    #     scaler = joblib.load(f"{self.info.data_dir}/scaler.pkl")
-    #     batch_x, y_true = self.prepare_batch(batch)
-    #     y_pred = self.model(batch_x)
+        data = torch.cat([batch_x, y_pred], dim=1).cpu().numpy()
+        data = scaler.inverse_transform(data)
+        y_pred = data[:, -1]
 
-    #     seq_y = batch_x["seq_y"]
+        data = torch.cat([batch_x, y_true], dim=1).cpu().numpy()
+        data = scaler.inverse_transform(data)
+        y_true = data[:, -1]
 
-    #     y_true = transform_data(seq_y, y_true, self.t_dim)
-    #     y_pred = transform_data(seq_y, y_pred, self.t_dim)
-    #     res = np.concatenate([y_true, y_pred], axis=1)
-    #     df = pd.DataFrame(res, columns=["y_true", "y_pred"])
-    #     ts = int(time.time())
-    #     res_dir = f"{self.info.output_dir}/res/{ts}_{self.info.run_name}"
-    #     if not os.path.exists(self.info.output_dir):
-    #         os.makedirs(self.info.output_dir)
+        y_true = y_true.reshape(-1, 1)
+        y_pred = y_pred.reshape(-1, 1)
 
-    #     if not os.path.exists(res_dir):
-    #         os.makedirs(res_dir)
+        res = np.concatenate([y_true, y_pred], axis=1)
+        print(res.shape)
 
-    #     df.to_csv(
-    #         f"{res_dir}/res.csv",
-    #         index=False,
-    #     )
+        df = pd.DataFrame(res, columns=["y_true", "y_pred"])
+
+        ts = int(time.time())
+
+        res_dir = f"{self.info.output_dir}/{ts}_{self.info.run_name}"
+        if not os.path.exists(self.info.output_dir):
+            os.makedirs(self.info.output_dir)
+
+        if not os.path.exists(res_dir):
+            os.makedirs(res_dir)
+
+        df.to_csv(
+            f"{res_dir}/res.csv",
+            index=False,
+        )
 
     # def on_validation_epoch_end(self):
     #     val_y_trues = torch.cat(self.val_y_trues)
@@ -280,5 +287,4 @@ class Runner(L.LightningModule):
     #         y_pred, y_true = self.prepare_eval(y_out, batch_y)
     #         y_preds.append(y_pred)
 
-    #     y_preds = torch.tensor(y_preds)
-    #     return {"y_pred": y_preds, "y_true": y_true}
+    #     y_pre

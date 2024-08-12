@@ -26,7 +26,11 @@ if [ $istest -eq 1 ]; then
         runner=$runner_name \
         runner.model.cfg.printout="True" \
         trainer=test \
-        run_mode.test_run="True"
+        run_mode.test_run="True" \
+        names.project=$project_name \
+        names.datamodule=$datamodule_name \
+        names.runner=$runner_name \
+        names.exp=$exp_name
 elif [ $istest2 -eq 1 ]; then
     echo ">>>>>> test2[$runner_name][$datamodule_name] <<<<<<<<"
     python main.py \

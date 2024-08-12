@@ -1,0 +1,24 @@
+# dir
+deployment_dir: "${paths.deployment_dir}"
+product_dir: "${paths.product_dir}"
+test_data_dir: "./data/sag/test"
+
+# selection
+model_num: 1
+model_key: main
+model_test: true
+
+model1:
+  scaler: ${paths.base_dir}/data/sag/model1_scaler.pkl
+  main: ksuchoi216/sag-final-deployment/model-znqzjxgv:v5
+
+model2:
+  scaler: ${paths.base_dir}/data/sag/model2_500us_scaler.pkl
+  main: ksuchoi216/sag-final-deployment/model-onadfyxu:v6
+
+model3:
+  scaler: ${paths.base_dir}/data/sag/model2_500us0_scaler.pkl
+  main: ksuchoi216/sag-final-deployment/model-sh27zns9:v0
+
+
+
