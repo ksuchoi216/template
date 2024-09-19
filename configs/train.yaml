@@ -1,6 +1,6 @@
 defaults:
   - _self_
-  - datamodule: base_datamodule.yaml
+  - datamodule: null
   - runner: null
   - trainer: default.yaml
   - callbacks: default.yaml
@@ -29,8 +29,20 @@ run_mode:
   hp_search: false
 
 # * Names
-names:
-  project: project
+memory:
+  printout: ${run_mode.test}
   datamodule: datamodule
   runner: runner
-  exp: exp
+  experiment_name: experiment_name
+  experiment_sub_name: experiment_sub_name
+  run_name: run_name
+  run_name_extra: run_name_extra
+
+mlflow:
+  tracking_uri: http://192.168.1.100:25001
+  experiment_name: experiment_name
+  run_name: run_name
+  run_description: run_description
+  log_datasets: False
+  log_models: True
+

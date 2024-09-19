@@ -1,13 +1,19 @@
 
 _target_: lightning.Trainer
-# profiler: "simple"
 default_root_dir: "${paths.log_dir}"
 min_epochs: 1
 max_epochs: 2
-accelerator: 'auto'
+accelerator: 'cpu'
 devices: 1
 
 num_sanity_val_steps: 0
-limit_train_batches: 1
-limit_val_batches: 1
-limit_test_batches: 1
+# limit_train_batches: 1
+# limit_val_batches: 1
+# limit_test_batches: 1
+
+# logger: 
+#   _target_: lightning.pytorch.loggers.MLFlowLogger
+#   experiment_name: "experiment_name"
+#   tracking_uri: http://192.168.1.100:25001
+#   run_name: "run_name"
+#   save_dir: "${paths.log_dir}"

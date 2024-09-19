@@ -1,0 +1,46 @@
+_target_: src.datamodules.datamodule.DataModule
+cfg:
+  # * info
+  data_dir: ${paths.data_dir}
+  test_run: ${run_mode.test_run}
+  datafolder_name: pv_dacon
+  dataset_name: pv_dacon
+  file_name: data
+  data_path: null
+  scaler_path: null
+
+
+  # * args
+  size: None
+  features: MS
+  target: power
+  scale: True
+  timeenc: 0
+  freq: t
+  seasonal_patterns: None
+  embed: "timeF"
+
+  # * loader
+  batch_size: 64
+  num_workers: 1
+  
+  # * data
+  input_dim: 10
+  # input_dim: 1
+  time_dim: 4
+  seq_len: 128
+  label_len: 12
+  pred_len: 24
+  # past_indices: [24, 48, 72, 168, 336, 720]
+  test_run_len: 1800
+
+  
+  # * data split
+  # train_end: 20496
+  data_idx:
+    weather_idx: [1, 6]
+    angle_idx: [6, 10]
+    target_idx: -1
+
+  test_indices: [23088, 23112, 23136, 23160, 23184, 23208, 23232, 23280, 23304, 23328, 23400, 23424, 23448, 23472, 23496, 23520, 23544, 23568, 23616, 23640, 23664, 23688, 23736, 23760, 23784, 23808, 23832, 23856, 23880, 23904, 23928, 23976, 24024, 24048, 24072, 24096, 24120, 24216, 24240, 24264, 24288, 24336, 24360, 24384, 24408, 24432, 24456, 24480, 24504, 24528, 24600, 24624, 24648, 24672, 24696, 24720, 24768, 24792, 24816, 24840, 24864, 24888, 24912, 24936, 24960, 24984, 25008, 25032, 25056, 25080, 25104, 25128, 25152, 25176, 25200, 25224, 25248, 25272, 25296, 25344, 25368, 25392, 25416, 25440, 25464, 25488, 25512, 25536, 25560, 25584]
+

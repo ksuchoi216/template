@@ -5,10 +5,11 @@ min_epochs: 1
 max_epochs: 20
 accelerator: 'auto'
 devices: 1
-logger: 
-  _target_: lightning.pytorch.loggers.WandbLogger
-  project: "project_name"
-  name: "run_name"
-  log_model: "all"
+# logger: 
+#   _target_: lightning.pytorch.loggers.MLFLowLogger
+#   experiment_name: "experiment_name"
+#   run_name: "run_name"
+#   save_dir: "${paths.log_dir}"
 # fast_dev_run: True
 # strategy: ddp_spawn
+

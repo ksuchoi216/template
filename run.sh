@@ -1,84 +1,98 @@
 #!/bin/bash
 export HYDRA_FULL_ERROR=1
+# * experiment_name
+experiment_name="pv_dacon"
+experiment_sub_name="modeling"
+# * options
+datamodule="pv_dacon"
+runner="lstm"
+# run_name_extra="lstm_num_layers/add_timefeat/add_past/bidirectional/has_cnn/cnn_n_blocks/has_time_decomp/has_freq_decomp"
+run_name_extra="lstm_num_layers/add_timefeat/add_past/bidirectional/has_cnn/cnn_n_blocks/has_time_decomp/has_freq_decomp"
+log_datasets="True"
+log_models="True"
 
-# * names
-project_name="forecasting"
-exp_name="test"
-
-# * selection
-datamodule_name="base_electricity"
-runner_name="lstm"
-
-# * option
-max_epochs=10
+# * runner option
+max_epochs=30
 
 # * condition
-istest=1
-istest2=0
+istest=0
 ismultigpustest=0
 ismultigpus=0
 ishp=0
 
 if [ $istest -eq 1 ]; then
-    echo ">>>>>> test[$runner_name][$datamodule_name] <<<<<<<<"
+    echo ">>>>>> test[$runner][$datamodule] <<<<<<<<"
     python main.py \
-        datamodule=$datamodule_name \
-        runner=$runner_name \
-        runner.model.cfg.printout="True" \
+        memory.experiment_name=$experiment_name \
+        memory.datamodule=$datamodule \
+        memory.runner=$runner \
+        memory.experiment_sub_name=$experiment_sub_name \
+        memory.printout="True" \
+        memory.run_name_extra=$run_name_extra \
+        mlflow.log_datasets=$log_datasets \
+        mlflow.log_models=$log_models \
+        datamodule=$datamodule \
         trainer=test \
-        run_mode.test_run="True" \
-        names.project=$project_name \
-        names.datamodule=$datamodule_name \
-        names.runner=$runner_name \
-        names.exp=$exp_name
-elif [ $istest2 -eq 1 ]; then
-    echo ">>>>>> test2[$runner_name][$datamodule_name] <<<<<<<<"
-    python main.py \
-        datamodule=$datamodule_name \
-        runner=$runner_name \
-        runner.model.cfg.printout="True" \
-        trainer=test2 \
-        run_mode.test_run="True"
-elif [ $ismultigpustest -eq 1 ]; then
-    echo ">>>>>> multi gpus test[$runner_name][$datamodule_name] <<<<<<<<"
-    python main.py \
-        datamodule=$datamodule_name \
-        runner=$runner_name \
-        runner.model.cfg.printout="True" \
-        trainer=test_multigpus \
+        runner=$runner \
         run_mode.test_run="True"
 elif [ $ishp -eq 1 ]; then
-    echo ">>>>>>> hp search[$runner_name][$datamodule_name] <<<<<<<"
+    echo ">>>>>>> hp search[$runner][$datamodule] <<<<<<<"
     python main.py --multirun \
-        datamodule=$datamodule_name \
-        runner=$runner_name \
-        runner.model.cfg.printout="False" \
+        memory.experiment_name=$experiment_name \
+        memory.datamodule=$datamodule \
+        memory.runner=$runner \
+        memory.experiment_sub_name=$experiment_sub_name \
+        memory.printout="False" \
+        memory.run_name_extra=$run_name_extra \
+        datamodule=$datamodule \
+        runner=$runner \
         run_mode.hp_search="True" \
         run_mode.pred="False" \
         trainer=hp_search \
         trainer.max_epochs=$max_epochs \
-        hp_search=$runner_name
+        hp_search=$runner
+elif [ $ismultigpustest -eq 1 ]; then
+    echo ">>>>>> multi gpus test[$runner][$datamodule] <<<<<<<<"
+    python main.py \
+        memory.experiment_name=$experiment_name \
+        memory.datamodule=$datamodule \
+        memory.runner=$runner \
+        memory.experiment_sub_name=$experiment_sub_name \
+        memory.printout="True" \
+        memory.run_name_extra=$run_name_extra \
+        mlflow.log_datasets=$log_datasets \
+        mlflow.log_models=$log_models \
+        datamodule=$datamodule \
+        runner=$runner \
+        trainer=test_multigpus \
+        run_mode.test_run="True"
 elif [ $ismultigpus -eq 1 ]; then
-    echo ">>>>>>> multi gpus[$runner_name][$datamodule_name] <<<<<<<"
+    echo ">>>>>>> multi gpus[$runner][$datamodule] <<<<<<<"
     python main.py \
-        datamodule=$datamodule_name \
-        runner=$runner_name \
-        runner.model.cfg.printout="False" \
+        memory.experiment_name=$experiment_name \
+        memory.datamodule=$datamodule \
+        memory.runner=$runner \
+        memory.experiment_sub_name=$experiment_sub_name \
+        memory.printout="False" \
+        memory.run_name_extra=$run_name_extra \
+        mlflow.log_datasets=$log_datasets \
+        mlflow.log_models=$log_models \
+        datamodule=$datamodule \
+        runner=$runner \
         trainer=multigpus \
-        trainer.max_epochs=$max_epochs \
-        names.project=$project_name \
-        names.datamodule=$datamodule_name \
-        names.runner=$runner_name \
-        names.exp=$exp_name
+        trainer.max_epochs=$max_epochs
 else
-    echo ">>>>>>> single gpu[$runner_name][$datamodule_name] <<<<<<<<<<"
+    echo ">>>>>>> single gpu[$runner][$datamodule] <<<<<<<<<<"
     python main.py \
-        datamodule=$datamodule_name \
-        runner=$runner_name \
-        runner.model.cfg.printout="False" \
-        trainer.max_epochs=$max_epochs \
-        names.project=$project_name \
-        names.datamodule=$datamodule_name \
-        names.runner=$runner_name \
-        names.exp=$exp_name
+        memory.experiment_name=$experiment_name \
+        memory.datamodule=$datamodule \
+        memory.runner=$runner \
+        memory.experiment_sub_name=$experiment_sub_name \
+        memory.printout="False" \
+        memory.run_name_extra=$run_name_extra \
+        mlflow.log_datasets=$log_datasets \
+        mlflow.log_models=$log_models \
+        datamodule=$datamodule \
+        runner=$runner \
+        trainer.max_epochs=$max_epochs
 fi

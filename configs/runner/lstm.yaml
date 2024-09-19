@@ -1,19 +1,18 @@
 _target_: src.runners.runner.Runner
-
 info:
-  output_dir: "${paths.output_dir}/exp"
-  data_dir: "${paths.data_dir}"
+  output_dir: "${paths.output_dir}"
+  scaler_path: null
   run_name: null
 
 optimizer:
-  # _target_: torch.optim.AdamW
-  # _partial_: true
-  # lr: 0.05
-  # betas: [0.9, 0.95]
-  # weight_decay: 0.001
-  _target_: torch.optim.Adam
+  _target_: torch.optim.AdamW
   _partial_: true
-  lr: 0.05
+  lr: 0.001
+  betas: [0.9, 0.95]
+  weight_decay: 0.005
+  # _target_: torch.optim.Adam
+  # _partial_: true
+  # lr: 0.001
 
 scheduler:
   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
@@ -26,27 +25,49 @@ model:
   _target_: src.models.lstm.Model
   cfg:
     # * info
-    runner_name: ${names.runner}
-    printout: null
+    model_name: ${memory.runner}
+    printout: ${memory.printout}
+
+    # * data
     seq_len: ${datamodule.cfg.seq_len}
     label_len: ${datamodule.cfg.label_len}
     pred_len: ${datamodule.cfg.pred_len}
-    input_dim: ${datamodule.cfg.input_dim}
     features: ${datamodule.cfg.features}
+    time_dim: ${datamodule.cfg.time_dim}
+    input_dim: ${datamodule.cfg.input_dim}
+    # past_len: ${datamodule.cfg.indices.past_len}
 
     # * hyperparameters
-    lstm_hidden_size: 100
-    lstm_num_layers: 1
-    bidirectional: False
+    dropout: 0.2
+    hidden_size: 2
+    bidirectional: true
+    lstm_hidden_size: 10
+    lstm_num_layers: 4
+    fc_hidden_size: 128
 
-    fc_hidden_size: 100
+    # ! input part
+    add_timefeat: false
+    
+    # ! time part
+    has_time_decomp: false
+    time_hidden_size: 16
+    kernel_size: 99
 
-    dropout: 0.5
+    # ! freq part
+    has_freq_decomp: false
+    freq_hidden_size: 16
+
+    # ! cnn part
+    has_cnn: true
+    cnn_out_channel: 32
+    cnn_kernel_size: 3
+    cnn_n_blocks: 5
     maxpool_size: 2
 
+
 metric_selection:
-  train: ['rmse', 'mse', 'mape']
-  test: ['rmse', 'mse', 'mape']
+  train: ['rmse', 'mse']
+  test: ['rmse', 'mse']
 
 metrics:
   rmse:
@@ -67,8 +88,7 @@ criterion:
   mae:
     _target_: torch.nn.L1Loss
 
-
 setup:
   monitor: val/mse
   mode: min
-  patience: 5
+  patience: 10
